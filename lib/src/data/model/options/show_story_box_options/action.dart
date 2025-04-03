@@ -1,2 +1,0 @@
-/// Action
-abstract class Action {}
