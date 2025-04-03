@@ -17,11 +17,11 @@ class SimpleLogger implements Logger {
 }
 
 Future<void> main() async {
-  VKBridge.instance.setLogger(SimpleLogger());
+  // VKBridge.instance.setLogger(SimpleLogger());
 
-  final result = await VKBridge.instance.init();
+  // final result = await VKBridge.instance.init();
 
-  print('VKBridge.init: $result');
+  // print('VKBridge.init: $result');
 
   runApp(MyApp());
 }
