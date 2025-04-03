@@ -33,7 +33,10 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-
+  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+  <script>
+    vkBridge.send("VKWebAppInit", {});
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
