@@ -1,6 +1,6 @@
 {
-    "name": "testapp",
-    "short_name": "testapp",
+    "name": "pocker_home",
+    "short_name": "pocker_home",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
