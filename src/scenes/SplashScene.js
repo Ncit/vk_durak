@@ -27,7 +27,7 @@ export class SplashScene extends Phaser.Scene {
         });
 
         this.time.addEvent({
-        delay: 100,
+        delay: 1500,
         loop: false,
         callback: () => {
             start_icon.destroy();
