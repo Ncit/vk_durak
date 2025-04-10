@@ -43,6 +43,10 @@
     </head>
     <body>
         <div id="game-container"></div>
+        <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+  <script>
+    vkBridge.send("VKWebAppInit", {});
+  </script>
         <script src="./phaser.js"></script>
         <script type="module" src="./src/main.js"></script>
     </body>
