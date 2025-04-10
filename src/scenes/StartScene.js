@@ -18,10 +18,6 @@ export class StartScene extends Phaser.Scene {
         this.load.image('card_back', 'assets/back.png');
         this.load.image('background', 'assets/background.png');
         this.load.image('placeholder', 'assets/placeholder.png');
-
-        this.load.image('logo', 'assets/phaser.png');
-
-        this.load.image('game_table', 'assets/table_teenpatti_normal@2x.png', { width: width / 1.5, height: height / 1.5 });
     }
 
     create() {
