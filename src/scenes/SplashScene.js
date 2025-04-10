@@ -14,7 +14,6 @@ export class SplashScene extends Phaser.Scene {
 
     create() {
         initVkBridgeApp();
-        friendsInvite();
 
         const start_icon = this.add.image(640, 300, 'start_icon');
 
@@ -28,7 +27,7 @@ export class SplashScene extends Phaser.Scene {
         });
 
         this.time.addEvent({
-        delay: 1500,
+        delay: 100,
         loop: false,
         callback: () => {
             start_icon.destroy();

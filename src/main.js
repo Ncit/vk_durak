@@ -1,10 +1,11 @@
-import { StartScene } from './scenes/StartScene.js';
+import { GameScene } from './scenes/GameScene.js';
 import { SplashScene } from './scenes/SplashScene.js';
 import { MenuScene } from './scenes/MenuScene.js';
 import { FriendsScene } from './scenes/FriendsScene.js';
 import { SettingsScene } from './scenes/SettingsScene.js';
 import { ProfileScene } from './scenes/ProfileScene.js';
 import { FriendsTableScene } from './scenes/FriendsTableScene.js';
+import { CancelAlertScene } from './scenes/CancelAlertScene.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -16,7 +17,14 @@ const config = {
     backgroundColor: '#123456',
     pixelArt: false,
     scene: [
-        SplashScene, MenuScene, StartScene, FriendsScene, ProfileScene, SettingsScene, FriendsTableScene
+        // SplashScene, 
+        // MenuScene, 
+        GameScene, 
+        // FriendsScene, 
+        // ProfileScene, 
+        // SettingsScene, 
+        // FriendsTableScene, 
+        // CancelAlertScene
     ],
     scale: {
         mode: Phaser.Scale.FIT,

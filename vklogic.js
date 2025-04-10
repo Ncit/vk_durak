@@ -14,5 +14,4 @@ function friendsInvite() {
     // Ошибка
     console.log(error);
   });
-
 }

@@ -10,11 +10,10 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        
-    const randomButton = this.add.text(100, 100, 'Случайная комната', { fill: '#0f0' })
+       const randomButton = this.add.text(100, 100, 'Случайная комната', { fill: '#0f0' })
       .setInteractive()
       .on('pointerdown', () => {
-        this.scene.start("StartScene")
+        this.scene.start("GameScene")
         this.scene.stop("MenuScene")
       } );
 

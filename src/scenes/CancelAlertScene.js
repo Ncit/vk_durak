@@ -1,7 +1,7 @@
-export class FriendsScene extends Phaser.Scene {
+export class CancelAlertScene extends Phaser.Scene {
 
     constructor() {
-        super('FriendsScene');
+        super('CancelAlertScene');
     }
 
     preload() {
@@ -15,19 +15,12 @@ export class FriendsScene extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => {
         this.scene.start("MenuScene")
-        this.scene.stop("FriendsScene")
+        this.scene.stop("CancelAlertScene")
       } );
-
-    this.add.text(100, 200, 'Пригласить друзей', { fill: '#0f0' })
-      .setInteractive()
-      .on('pointerdown', () => {
-        friendsInvite();
-      } );
-
-        
     }
 
     update() {
+
     }
 
 }
