@@ -5,10 +5,12 @@ export class SplashScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.script('vklogic','./vklogic.js')
         this.load.image('start_icon', 'assets/icon.png');
     }
 
     create() {
+        initVkBridgeApp();
 
         const start_icon = this.add.image(640, 300, 'start_icon');
 
@@ -26,7 +28,7 @@ export class SplashScene extends Phaser.Scene {
         loop: false,
         callback: () => {
             start_icon.destroy();
-            this.scene.start("StartScene");
+            this.scene.start("MenuScene");
         }
     })
     }

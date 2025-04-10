@@ -5,41 +5,41 @@ export class StartScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'assets/space.png');
+        let { width, height } = this.sys.game.canvas;
+
+        const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
+
+        suits.forEach(suit => {
+            values.forEach(value => {
+                this.load.image(`${suit}-${value}`, `assets/${suit}-${value}.png`);
+            });
+        });
+        this.load.image('card_back', 'assets/back.png');
+        this.load.image('background', 'assets/background.png');
+        this.load.image('placeholder', 'assets/placeholder.png');
+
         this.load.image('logo', 'assets/phaser.png');
 
-        //  The ship sprite is CC0 from https://ansimuz.itch.io - check out his other work!
-        this.load.spritesheet('ship', 'assets/spaceship.png', { frameWidth: 176, frameHeight: 96 });
+        this.load.image('game_table', 'assets/table_teenpatti_normal@2x.png', { width: width / 1.5, height: height / 1.5 });
     }
 
     create() {
+
+        let { width, height } = this.sys.game.canvas;
+
         this.background = this.add.tileSprite(640, 360, 1280, 720, 'background');
 
-        const logo = this.add.image(640, 200, 'logo');
-
-        const ship = this.add.sprite(640, 360, 'ship');
-
-        ship.anims.create({
-            key: 'fly',
-            frames: this.anims.generateFrameNumbers('ship', { start: 0, end: 2 }),
-            frameRate: 15,
-            repeat: -1
-        });
-
-        ship.play('fly');
-
-        this.tweens.add({
-            targets: logo,
-            y: 400,
-            duration: 1500,
-            ease: 'Sine.inOut',
-            yoyo: true,
-            loop: -1
-        });
+        this.add.text(100, 100, 'Назад', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.scene.start("MenuScene")
+                this.scene.stop("FriendsScene")
+            });
+        const game_table = this.add.image(640, 420, 'game_table');
     }
 
     update() {
-        this.background.tilePositionX += 2;
     }
-    
+
 }

@@ -1,5 +1,10 @@
 import { StartScene } from './scenes/StartScene.js';
 import { SplashScene } from './scenes/SplashScene.js';
+import { MenuScene } from './scenes/MenuScene.js';
+import { FriendsScene } from './scenes/FriendsScene.js';
+import { SettingsScene } from './scenes/SettingsScene.js';
+import { ProfileScene } from './scenes/ProfileScene.js';
+import { FriendsTableScene } from './scenes/FriendsTableScene.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -8,10 +13,10 @@ const config = {
     parent: 'game-container',
     width: 1280,
     height: 720,
-    backgroundColor: '#000000',
+    backgroundColor: '#123456',
     pixelArt: false,
     scene: [
-        SplashScene, StartScene
+        SplashScene, MenuScene, StartScene, FriendsScene, ProfileScene, SettingsScene, FriendsTableScene
     ],
     scale: {
         mode: Phaser.Scale.FIT,
