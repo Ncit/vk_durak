@@ -1,0 +1,12 @@
+version: '1'
+
+services:
+
+  web:
+    container_name: 'pocker-game-container'
+    image: 'pocker-game'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - "8080:80"
