@@ -17,13 +17,13 @@ const config = {
     backgroundColor: '#123456',
     pixelArt: false,
     scene: [
-        // SplashScene, 
-        // MenuScene, 
+        SplashScene, 
+        MenuScene, 
         GameScene, 
-        // FriendsScene, 
-        // ProfileScene, 
-        // SettingsScene, 
-        // FriendsTableScene, 
+        FriendsScene, 
+        ProfileScene, 
+        SettingsScene, 
+        FriendsTableScene, 
         // CancelAlertScene
     ],
     scale: {
