@@ -18,13 +18,13 @@ const config = {
     pixelArt: false,
     scene: [
         SplashScene, 
-        // MenuScene, 
+        MenuScene, 
         RobotRoomScene, 
-        // FriendsScene, 
-        // ProfileScene, 
-        // SettingsScene, 
-        // FriendsTableScene, 
-        // CancelAlertScene
+        FriendsScene, 
+        ProfileScene, 
+        SettingsScene, 
+        FriendsTableScene, 
+        CancelAlertScene
     ],
     scale: {
         mode: Phaser.Scale.FIT,
