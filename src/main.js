@@ -1,4 +1,4 @@
-import { GameScene } from './scenes/GameScene.js';
+import { RobotRoomScene } from './scenes/RobotRoomScene.js';
 import { SplashScene } from './scenes/SplashScene.js';
 import { MenuScene } from './scenes/MenuScene.js';
 import { FriendsScene } from './scenes/FriendsScene.js';
@@ -18,12 +18,12 @@ const config = {
     pixelArt: false,
     scene: [
         SplashScene, 
-        MenuScene, 
-        GameScene, 
-        FriendsScene, 
-        ProfileScene, 
-        SettingsScene, 
-        FriendsTableScene, 
+        // MenuScene, 
+        RobotRoomScene, 
+        // FriendsScene, 
+        // ProfileScene, 
+        // SettingsScene, 
+        // FriendsTableScene, 
         // CancelAlertScene
     ],
     scale: {

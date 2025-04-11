@@ -6,7 +6,11 @@ export class SplashScene extends Phaser.Scene {
 
     preload() {
         let { width, height } = this.sys.game.canvas;
-        this.load.script('vklogic','./vklogic.js')
+        this.load.script('player_card', './src/scripts/domain/PlayerCard.js')
+        this.load.script('board_card', './src/scripts/domain/BoardCard.js')
+        this.load.script('pocker_player', './src/scripts/domain/PockerPlayer.js')
+        this.load.script('deck', './src/scripts/domain/Deck.js')
+        this.load.script('vklogic','./src/scripts/vklogic.js')
         this.load.image('start_icon', 'assets/icon.png');
 
         this.load.image('game_table', 'assets/table_teenpatti_normal@2x.png', { width: width / 1.5, height: height / 1.5 });
@@ -27,11 +31,12 @@ export class SplashScene extends Phaser.Scene {
         });
 
         this.time.addEvent({
-        delay: 1500,
+        delay: 100,
         loop: false,
         callback: () => {
             start_icon.destroy();
-            this.scene.start("MenuScene");
+            // this.scene.start("MenuScene");
+            this.scene.start("RobotRoomScene");
         }
     })
     }
