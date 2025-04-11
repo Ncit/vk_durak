@@ -35,8 +35,8 @@ export class SplashScene extends Phaser.Scene {
         loop: false,
         callback: () => {
             start_icon.destroy();
-            // this.scene.start("MenuScene");
-            this.scene.start("RobotRoomScene");
+            this.scene.start("MenuScene");
+            // this.scene.start("RobotRoomScene");
         }
     })
     }
