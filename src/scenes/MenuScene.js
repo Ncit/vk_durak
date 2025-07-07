@@ -6,10 +6,13 @@ export class MenuScene extends Phaser.Scene {
 
     preload() {
         let { width, height } = this.sys.game.canvas;
-        
+        this.load.script('vklogic','./src/scripts/vklogic.js')
     }
 
     create() {
+        setupApp(function(appData) {
+          console.log(appData);
+});
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
       .on('pointerdown', () => {
