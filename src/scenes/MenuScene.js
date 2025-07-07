@@ -14,14 +14,16 @@ export class MenuScene extends Phaser.Scene {
     create() {
         setupApp(function(appData) {
 
+          const newUser = {
+  id: appData.id,
+  name: appData.first_name,
+  lastName: appData.last_name
+};
+
     console.log("---");
-    console.log(appData);
+    console.log(newUser);
     console.log("---");
-  //         const newUser = {
-  // id: appData.vk_app_id,
-  // name: appData.data.first_name,
-  // lastName: appData.data.last_name
-// };
+
   //         saveToSupabase('users', newUser)
   // .then(response => {
   //   // Handle success

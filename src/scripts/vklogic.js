@@ -42,7 +42,6 @@ function auth(userId,authCallback) {
   .then((data) => { 
     if (data.id) {
       // Данные пользователя получены
-      console.log(data); 
       authCallback(data);     
     }
   })
