@@ -23,7 +23,7 @@ function setupApp(appDataCallback) {
   .then((data) => { 
     if (data.vk_app_id) {
       // Параметры запуска получены
-      appDataCallback(data)
+      appDataCallback(auth(data.vk_app_id))
     }
   })
   .catch((error) => {
@@ -39,7 +39,8 @@ function auth(userId) {
   .then((data) => { 
     if (data.id) {
       // Данные пользователя получены
-      console.log(data);      
+      console.log(data); 
+      return data;     
     }
   })
   .catch((error) => {
