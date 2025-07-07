@@ -14,20 +14,20 @@ export class MenuScene extends Phaser.Scene {
     create() {
         setupApp(function(appData) {
           auth(appData.data.id)
-          const newUser = {
-  id: appData.data.id,
-  name: appData.data.first_name,
-  lastName: appData.data.last_name
-};
-          saveToSupabase('users', newUser)
-  .then(response => {
-    // Handle success
-    alert("SUCCESS");
-  })
-  .catch(error => {
-    // Handle error
-    alert("ERROR");
-  });
+//           const newUser = {
+//   id: appData.data.id,
+//   name: appData.data.first_name,
+//   lastName: appData.data.last_name
+// };
+  //         saveToSupabase('users', newUser)
+  // .then(response => {
+  //   // Handle success
+  //   alert("SUCCESS");
+  // })
+  // .catch(error => {
+  //   // Handle error
+  //   alert("ERROR");
+  // });
 });
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
