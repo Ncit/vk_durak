@@ -7,11 +7,27 @@ export class MenuScene extends Phaser.Scene {
     preload() {
         let { width, height } = this.sys.game.canvas;
         this.load.script('vklogic','./src/scripts/vklogic.js')
+        this.load.script('bdlogic','./src/scripts/bdlogic.js')
+        
     }
 
     create() {
         setupApp(function(appData) {
-          auth(appData.vk_user_id)
+          auth(appData.data.id)
+          const newUser = {
+  id: appData.data.id,
+  name: appData.data.first_name,
+  lastName: appData.data.last_name
+};
+          saveToSupabase('users', newUser)
+  .then(response => {
+    // Handle success
+    alert("SUCCESS");
+  })
+  .catch(error => {
+    // Handle error
+    alert("ERROR");
+  });
 });
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
