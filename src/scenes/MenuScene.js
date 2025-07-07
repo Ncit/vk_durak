@@ -24,9 +24,11 @@ export class MenuScene extends Phaser.Scene {
     console.log(newUser);
     console.log("---");
 
-          upsertToSupabase('users', newUser)
+  upsertToSupabase('users', newUser)
   .then(response => {
     // Handle success
+     console.log("---");
+     console.log("response");
     alert("SUCCESS");
   })
   .catch(error => {
