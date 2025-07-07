@@ -21,8 +21,8 @@ function friendsInvite() {
 function setupApp(appDataCallback) {
   vkBridge.send('VKWebAppGetLaunchParams')
   .then((data) => { 
-    if (data.vk_app_id) {
-      auth(data.vk_app_id, function(authData) {
+    if (data.vk_user_id) {
+      auth(data.vk_user_id, function(authData) {
 
       console.log(data); 
       // Параметры запуска получены
