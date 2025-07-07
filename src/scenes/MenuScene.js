@@ -24,15 +24,15 @@ export class MenuScene extends Phaser.Scene {
     console.log(newUser);
     console.log("---");
 
-  //         saveToSupabase('users', newUser)
-  // .then(response => {
-  //   // Handle success
-  //   alert("SUCCESS");
-  // })
-  // .catch(error => {
-  //   // Handle error
-  //   alert("ERROR");
-  // });
+          upsertToSupabase('users', newUser)
+  .then(response => {
+    // Handle success
+    alert("SUCCESS");
+  })
+  .catch(error => {
+    // Handle error
+    alert("ERROR");
+  });
 });
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
