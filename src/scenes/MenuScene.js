@@ -13,7 +13,7 @@ export class MenuScene extends Phaser.Scene {
 
     create() {
         setupApp(function(appData) {
-          auth(appData.data.id)
+          auth(appData)
 //           const newUser = {
 //   id: appData.data.id,
 //   name: appData.data.first_name,

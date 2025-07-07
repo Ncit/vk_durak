@@ -20,3 +20,22 @@
 //     throw error;
 //   }
 // }
+
+// async function upsertToSupabase(tableName, data, onConflictColumn = 'id') {
+//   try {
+//     const { data: responseData, error } = await supabase
+//       .from(tableName)
+//       .upsert(data, { onConflict: onConflictColumn })
+//       .select();
+
+//     if (error) {
+//       throw error;
+//     }
+
+//     console.log('Data upserted successfully:', responseData);
+//     return responseData;
+//   } catch (error) {
+//     console.error('Error upserting to Supabase:', error.message);
+//     throw error;
+//   }
+// }
