@@ -15,7 +15,7 @@ export class MenuScene extends Phaser.Scene {
         setupApp(function(appData) {
 
     console.log("---");
-          auth(appData.vk_app_id)
+    console.log(appData);
     console.log("---");
   //         const newUser = {
   // id: appData.vk_app_id,
