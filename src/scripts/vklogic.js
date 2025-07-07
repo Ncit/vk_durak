@@ -22,8 +22,11 @@ function setupApp(appDataCallback) {
   vkBridge.send('VKWebAppGetLaunchParams')
   .then((data) => { 
     if (data.vk_app_id) {
+      auth(data.vk_app_id, function(authData) {
+
       // Параметры запуска получены
-      appDataCallback(auth(data.vk_app_id))
+      appDataCallback(authData)
+});
     }
   })
   .catch((error) => {
@@ -32,7 +35,7 @@ function setupApp(appDataCallback) {
   });
 }
 
-function auth(userId) {
+function auth(userId,authCallback) {
   vkBridge.send('VKWebAppGetUserInfo', {
   user_id: userId
   })
@@ -40,7 +43,7 @@ function auth(userId) {
     if (data.id) {
       // Данные пользователя получены
       console.log(data); 
-      return data;     
+      authCallback(data);     
     }
   })
   .catch((error) => {
