@@ -31,18 +31,18 @@ function setupApp(appDataCallback) {
   });
 }
 
-// function auth() {
-//   bridge.send('VKWebAppGetUserInfo', {
-//   user_id: 743784474
-//   })
-//   .then((data) => { 
-//     if (data.id) {
-//       // Данные пользователя получены
-//       console.log(data);      
-//     }
-//   })
-//   .catch((error) => {
-//     // Ошибка
-//     console.log(error);
-//   });
-// }
+function auth(userId) {
+  bridge.send('VKWebAppGetUserInfo', {
+  user_id: userId
+  })
+  .then((data) => { 
+    if (data.id) {
+      // Данные пользователя получены
+      console.log(data);      
+    }
+  })
+  .catch((error) => {
+    // Ошибка
+    console.log(error);
+  });
+}

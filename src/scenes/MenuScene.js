@@ -11,7 +11,7 @@ export class MenuScene extends Phaser.Scene {
 
     create() {
         setupApp(function(appData) {
-          console.log(appData);
+          auth(appData.vk_user_id)
 });
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
