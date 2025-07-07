@@ -32,7 +32,7 @@ function setupApp(appDataCallback) {
 }
 
 function auth(userId) {
-  bridge.send('VKWebAppGetUserInfo', {
+  vkBridge.send('VKWebAppGetUserInfo', {
   user_id: userId
   })
   .then((data) => { 
