@@ -44,9 +44,6 @@ export class MenuScene extends Phaser.Scene {
         this.scene.stop("MenuScene")
         }
     })
-        loadLobby().then(function(result) {
-            joinGame(result[0].id)
-}) 
       } );
 
     // const friendsTableButton = this.add.text(100, 150, 'Играть с друзьями', { fill: '#0f0' })
@@ -101,6 +98,10 @@ const newUser = {
   .then(response => {
     // Handle success
     window.gameConfig.currentUser = response[0]
+
+        loadLobby().then(function(result) {
+            joinGame(result[0].id)
+}) 
   })
   .catch(error => {
     // Handle error

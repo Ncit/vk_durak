@@ -90,7 +90,7 @@ export class RobotRoomScene extends Phaser.Scene {
 
     create() {
 
-        startHeartbeat(window.gameConfig.gameId)
+        startHeartbeat()
         let background = this.add.image(0, 0, 'background');
 
         background.setOrigin(0, 0);

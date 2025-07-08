@@ -24,7 +24,7 @@ async function loadLobby() {
     console.error('Error loading games:', error);
     return;
   }
-  return await games;
+  return games;
 }
 
 async function createNewGame() {
@@ -107,11 +107,6 @@ async function joinGame(gameId) {
     alert('Error getting game data: ' + gameError.message);
     return;
   }
-  
-
-     console.log("Current game");
-     console.log(game);
-     console.log("---");
   window.gameConfig.currentGame = game;
   
   // // Subscribe to game updates
@@ -119,6 +114,8 @@ async function joinGame(gameId) {
   
   // // Load initial game state
   // loadGameState(gameId);
+
+      cleanDB();
 }
 
 function setupGameSubscriptions(gameId) {
@@ -243,13 +240,12 @@ function renderPlayers() {
 
 
 // In your client-side code
-const HEARTBEAT_INTERVAL = 50000; // 5 seconds
+const HEARTBEAT_INTERVAL = 5000; // 5 seconds
 
-function startHeartbeat(gameId) {
+function startHeartbeat() {
+  var gameId = window.gameConfig.currentGame.id
   // Send initial heartbeat
   sendHeartbeat(gameId);
-  
-  // Set up periodic heartbeat
   const heartbeatInterval = setInterval(() => {
     sendHeartbeat(gameId);
   }, HEARTBEAT_INTERVAL);
@@ -327,4 +323,25 @@ async function handleDisconnectedPlayers(gameId) {
   
   // Check if game needs to continue with remaining players
   await checkGameContinuation(gameId);
+}
+
+function cleanDB() {
+
+  window.setInterval(function(){ // Set interval for checking
+    callEdgeFunction();
+}, 30000);
+}
+async function callEdgeFunction() {
+  const { data, error } = await window.gameConfig.supabase.from('game_players')
+    .delete()
+    .lt('last_seen', new Date(Date.now() - 30 * 1000).toISOString())
+    .eq('game_id', window.gameConfig.currentGame.id);
+
+  if (error) {
+    console.error('Error invoking function:', error)
+    return
+  }
+
+  console.log('Function response:', data)
+  return data
 }
