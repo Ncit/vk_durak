@@ -110,10 +110,10 @@ async function joinGame(gameId) {
   window.gameConfig.currentGame = game;
   
   // // Subscribe to game updates
-  // setupGameSubscriptions(gameId);
+  setupGameSubscriptions(gameId);
   
   // // Load initial game state
-  // loadGameState(gameId);
+  loadGameState(gameId);
 
       callEdgeFunction();
       cleanDB();
@@ -121,7 +121,7 @@ async function joinGame(gameId) {
 
 function setupGameSubscriptions(gameId) {
   // Game state changes
-  supabase
+  window.gameConfig.supabase
     .channel('game-state-' + gameId)
     .on(
       'postgres_changes',
@@ -138,7 +138,7 @@ function setupGameSubscriptions(gameId) {
     .subscribe();
   
   // Player changes
-  supabase
+  window.gameConfig.supabase
     .channel('game-players-' + gameId)
     .on(
       'postgres_changes',
@@ -198,7 +198,7 @@ async function loadPlayers(gameId) {
     .from('game_players')
     .select(`
       *,
-      player:players(username, avatarUrl)
+      player:players(name, avatarUrl)
     `)
     .eq('game_id', gameId)
     .order('seat_number', { ascending: true });
@@ -214,7 +214,9 @@ async function loadPlayers(gameId) {
 
 function updateGameState(state) {
   window.gameConfig.gameState = state;
-  
+  console.log("---")
+  console.log(state);
+  console.log("---")
   // // Update UI
   // potAmount.textContent = state.pot;
   
@@ -241,9 +243,14 @@ function renderPlayers() {
 
 
 // In your client-side code
-const HEARTBEAT_INTERVAL = 5000; // 5 seconds
-
+var isStartedHeartBeat = false
 function startHeartbeat() {
+  if (isStartedHeartBeat) {
+    return
+  }
+
+const HEARTBEAT_INTERVAL = 5000; // 5 seconds
+  isStartedHeartBeat = true
   var gameId = window.gameConfig.currentGame.id
   // Send initial heartbeat
   sendHeartbeat(gameId);
@@ -291,7 +298,7 @@ async function markAsDisconnected(gameId) {
 // In your game state management
 async function handleDisconnectedPlayers(gameId) {
   // Get all disconnected players
-  const { data: disconnectedPlayers, error } = await supabase
+  const { data: disconnectedPlayers, error } = await window.gameConfig.supabase
     .from('game_players')
     .select('*')
     .eq('game_id', gameId)
@@ -303,7 +310,7 @@ async function handleDisconnectedPlayers(gameId) {
   for (const player of disconnectedPlayers) {
     // If player is in current hand, auto-fold them
     if (gameState && gameState.stage !== 'showdown') {
-      await supabase
+      await window.gameConfig.supabase
         .from('game_players')
         .update({ 
           is_active: false,
@@ -312,7 +319,7 @@ async function handleDisconnectedPlayers(gameId) {
         .eq('id', player.id);
       
       // Notify other players
-      await supabase
+      await window.gameConfig.supabase
         .channel('game-notifications-' + gameId)
         .send({
           type: 'broadcast',
@@ -342,7 +349,5 @@ async function callEdgeFunction() {
     console.error('Error invoking function:', error)
     return
   }
-
-  console.log('Function response:', data)
   return data
 }

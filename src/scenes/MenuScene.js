@@ -1,4 +1,4 @@
-var isDebug = true
+var isDebug = false
 
 export class MenuScene extends Phaser.Scene {
 
@@ -35,6 +35,8 @@ export class MenuScene extends Phaser.Scene {
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
       .on('pointerdown', () => {
+
+            joinGame(gameId)
         this.time.addEvent({
         delay: 1300,
         loop: false,
@@ -85,7 +87,7 @@ export class MenuScene extends Phaser.Scene {
     }
 
 }
-
+var gameId = null
 function prepareApp() {
   if (isDebug) {
 const newUser = {
@@ -100,7 +102,7 @@ const newUser = {
     window.gameConfig.currentUser = response[0]
 
         loadLobby().then(function(result) {
-            joinGame(result[0].id)
+          gameId = result[0].id
 }) 
   })
   .catch(error => {
