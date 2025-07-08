@@ -7,7 +7,7 @@ export class MenuScene extends Phaser.Scene {
     preload() {
         let { width, height } = this.sys.game.canvas;
         this.load.script('vklogic','./src/scripts/vklogic.js')
-        this.load.script('bdlogic','./src/scripts/bdlogic.js')
+        this.load.script('dblogic','./src/scripts/dblogic.js')
         
     }
 
@@ -20,21 +20,37 @@ export class MenuScene extends Phaser.Scene {
   lastName: appData.last_name
 };
 
-    console.log("---");
-    console.log(newUser);
-    console.log("---");
-
-  upsertToSupabase('users', newUser)
+//     console.log("---");
+//     console.log(newUser);
+//     console.log("---");
+// console.log('Supabase Instance: ', window.gameConfig.supabase)
+//           const newUser = {
+//   id: 123,
+//   name: "ASD",
+//   lastName: "DSA"
+// };
+  //  this.time.addEvent({
+  //       delay: 500,
+  //       loop: false,
+  //       callback: () => {
+            
+  upsertToSupabase('players', newUser)
   .then(response => {
     // Handle success
      console.log("---");
      console.log("response");
-    alert("SUCCESS");
+    // alert("SUCCESS");
   })
   .catch(error => {
     // Handle error
-    alert("ERROR");
+    // alert("ERROR");
+     console.log("---");
+     console.log(error);
   });
+        // }
+  //   })
+    
+
 });
        const randomButton = this.add.text(100, 100, 'Игра с ботами', { fill: '#0f0' })
       .setInteractive()
