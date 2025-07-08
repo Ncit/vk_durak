@@ -17,6 +17,9 @@ export class SplashScene extends Phaser.Scene {
     }
 
     create() {
+        // Set global scene reference for loading indicators
+        window.currentScene = this;
+        
         initVkBridgeApp();
 
         const start_icon = this.add.image(640, 300, 'start_icon');

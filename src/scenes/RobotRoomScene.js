@@ -89,8 +89,16 @@ export class RobotRoomScene extends Phaser.Scene {
     }
 
     create() {
-
-        startHeartbeat()
+        // Set global scene reference for loading indicators
+        window.currentScene = this;
+// this.time.addEvent({
+//         delay: 1700,
+//         loop: false,
+//         callback: () => {
+//         startHeartbeat();
+            
+//         }
+//     })
         
         let background = this.add.image(0, 0, 'background');
 

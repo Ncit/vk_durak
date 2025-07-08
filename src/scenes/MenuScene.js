@@ -1,4 +1,4 @@
-var isDebug = false
+var isDebug = true
 
 export class MenuScene extends Phaser.Scene {
 
@@ -13,6 +13,9 @@ export class MenuScene extends Phaser.Scene {
         
     }
     create() {
+      // Set global scene reference for loading indicators
+      window.currentScene = this;
+      
       prepareApp();
       // createNewGame();
 //         this.time.addEvent({
@@ -38,7 +41,7 @@ export class MenuScene extends Phaser.Scene {
 
             joinGame(gameId)
         this.time.addEvent({
-        delay: 1300,
+        delay: 2800,
         loop: false,
         callback: () => {
             
@@ -63,6 +66,18 @@ export class MenuScene extends Phaser.Scene {
         this.scene.stop("MenuScene")
         // this.scene.remove("MenuScene")
         } );
+
+    // Test button for loading indicators
+    // const testLoadingButton = this.add.text(100, 250, 'Test Loading System', { fill: '#ff0' })
+    //   .setInteractive()
+    //   .on('pointerdown', async () => {
+    //     try {
+    //       // Demo the different loading styles
+    //       await testLoadingSystem(this);
+    //     } catch (error) {
+    //       console.error('Loading test failed:', error);
+    //     }
+    //   });
 
 
     // const profileButton = this.add.text(100, 250, 'Профиль', { fill: '#0f0' })
@@ -89,26 +104,14 @@ export class MenuScene extends Phaser.Scene {
 }
 var gameId = null
 function prepareApp() {
-  var newUser = null
   if (isDebug) {
-newUser = {
+const newUser = {
   id: "123",
   name: "Тестовый игрок",
   lastName: "игрок2",
   avatarUrl: "https://gravatar.com/avatar/2cf48f97c5e3b33ede38271f2cc98554?s=400&d=robohash&r=x"
 };  
-  } else {
-
-  setupApp(function(appData) {
-
-  newUser = {
-  id: appData.id,
-  name: appData.first_name,
-  lastName: appData.last_name
-};  
-});
-  }
-   upsertToSupabase('players', newUser)
+  upsertToSupabase('players', newUser)
   .then(response => {
     // Handle success
     window.gameConfig.currentUser = response[0]
@@ -123,4 +126,80 @@ newUser = {
      console.log("---");
      console.log(error);
   });
+  } else {
+
+  setupApp(function(appData) {
+
+          const newUser = {
+  id: appData.id,
+  name: appData.first_name,
+  lastName: appData.last_name
+};  
+  upsertToSupabase('players', newUser)
+  .then(response => {
+    window.gameConfig.currentUser = response[0]
+
+        loadLobby().then(function(result) {
+          gameId = result[0].id
+}) 
+  })
+  .catch(error => {
+     console.log("---");
+     console.log(error);
+  });
+});
+  }
+}
+
+// Test function to demonstrate loading system
+async function testLoadingSystem(scene) {
+  console.log('Testing Phaser.js Loading System...');
+  
+  // Test 1: Basic loader
+  if (window.phaserLoader) {
+    const loaderId1 = window.phaserLoader.showLoader(scene, 'Basic loading test...', {
+      textColor: '#00ff00',
+      spinnerColor: 0x00ff00
+    });
+    
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    window.phaserLoader.hideLoader(loaderId1);
+  }
+  
+  // Test 2: Progress loader
+  if (window.phaserLoader) {
+    const loaderId2 = window.phaserLoader.showProgressLoader(scene, 'Progress test', 0, {
+      textColor: '#ffaa00',
+      spinnerColor: 0xffaa00
+    });
+    
+    for (let i = 0; i <= 100; i += 20) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      window.phaserLoader.updateProgress(loaderId2, 'Progress test', i);
+    }
+    
+    window.phaserLoader.hideLoader(loaderId2);
+  }
+  
+  // Test 3: Message updating loader
+  if (window.phaserLoader) {
+    const loaderId3 = window.phaserLoader.showLoader(scene, 'Step 1...', {
+      textColor: '#ff00ff',
+      spinnerColor: 0xff00ff
+    });
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    window.phaserLoader.updateMessage(loaderId3, 'Step 2...');
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    window.phaserLoader.updateMessage(loaderId3, 'Step 3...');
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    window.phaserLoader.updateMessage(loaderId3, 'Complete!');
+    
+    await new Promise(resolve => setTimeout(resolve, 500));
+    window.phaserLoader.hideLoader(loaderId3);
+  }
+  
+  console.log('Loading system test complete!');
 }
