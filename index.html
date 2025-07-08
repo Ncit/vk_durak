@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" type="application/json" href="/manifest.webmanifest" />
     <title>pocker</title>
     <style>
         /* Reset CSS: Please avoid making changes here unless you know what you're doing :) */
@@ -55,11 +56,22 @@
 <!-- <script src="https://unpkg.com/@supabase/supabase-js@2"></script> -->
 <script>
 //   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-  const db = supabase.createClient('https://daa17101f8a4.ngrok-free.app', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE')
+const options = {
+  global: {
+    headers: {
+      'ngrok-skip-browser-warning': '69420',
+      'Content-Type': 'application/json',
+    },
+  },
+};
+  const db = supabase.createClient('https://a21bf7bd0398.ngrok-free.app', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE', options)
  window.gameConfig = {
       supabase: db,
+      currentUser:  null,
+      currentGame: null,
+      gameState: null,
+      players: []
     }
-//   console.log('Supabase Instance: ', supabase)
 </script>
 </body>
 
