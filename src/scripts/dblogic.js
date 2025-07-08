@@ -115,6 +115,7 @@ async function joinGame(gameId) {
   // // Load initial game state
   // loadGameState(gameId);
 
+      callEdgeFunction();
       cleanDB();
 }
 
