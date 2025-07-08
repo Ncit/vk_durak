@@ -17,14 +17,14 @@ const config = {
     backgroundColor: '#123456',
     pixelArt: false,
     scene: [
-        // SplashScene, 
+        SplashScene, 
         MenuScene, 
-        // RobotRoomScene, 
-        // FriendsScene, 
-        // ProfileScene, 
-        // SettingsScene, 
-        // FriendsTableScene, 
-        // CancelAlertScene
+        RobotRoomScene, 
+        FriendsScene, 
+        ProfileScene, 
+        SettingsScene, 
+        FriendsTableScene, 
+        CancelAlertScene
     ],
     scale: {
         mode: Phaser.Scale.FIT,
