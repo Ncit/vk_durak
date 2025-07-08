@@ -89,14 +89,26 @@ export class MenuScene extends Phaser.Scene {
 }
 var gameId = null
 function prepareApp() {
+  var newUser = null
   if (isDebug) {
-const newUser = {
+newUser = {
   id: "123",
   name: "Тестовый игрок",
   lastName: "игрок2",
   avatarUrl: "https://gravatar.com/avatar/2cf48f97c5e3b33ede38271f2cc98554?s=400&d=robohash&r=x"
 };  
-  upsertToSupabase('players', newUser)
+  } else {
+
+  setupApp(function(appData) {
+
+  newUser = {
+  id: appData.id,
+  name: appData.first_name,
+  lastName: appData.last_name
+};  
+});
+  }
+   upsertToSupabase('players', newUser)
   .then(response => {
     // Handle success
     window.gameConfig.currentUser = response[0]
@@ -111,23 +123,4 @@ const newUser = {
      console.log("---");
      console.log(error);
   });
-  } else {
-
-  setupApp(function(appData) {
-
-          const newUser = {
-  id: appData.id,
-  name: appData.first_name,
-  lastName: appData.last_name
-};  
-  upsertToSupabase('players', newUser)
-  .then(response => {
-    window.gameConfig.currentUser = response[0]
-  })
-  .catch(error => {
-     console.log("---");
-     console.log(error);
-  });
-});
-  }
 }
