@@ -18,9 +18,15 @@ function showAsyncLoader(message = 'Loading...', options = {}) {
 
 // Helper function to hide loading with fallback
 function hideAsyncLoader(loaderId) {
-  if (loaderId && window.phaserLoader) {
-    window.phaserLoader.hideLoader(loaderId);
+  if (window.phaserLoader) {
+    // With single loader system, we can just hide current loader
+    window.phaserLoader.hideCurrent();
   }
+}
+
+// Helper function to check if loader is active
+function isLoaderActive() {
+  return window.phaserLoader && window.phaserLoader.isActive();
 }
 
 async function upsertToSupabase(tableName, data, onConflictColumn = 'id') {

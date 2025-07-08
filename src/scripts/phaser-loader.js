@@ -7,6 +7,7 @@ class PhaserLoader {
   constructor() {
     this.activeLoaders = new Map();
     this.loaderId = 0;
+    this.currentLoaderId = null; // Track single active loader
   }
 
   /**
@@ -17,8 +18,13 @@ class PhaserLoader {
    * @returns {string} loaderId - ID to use when hiding the loader
    */
   showLoader(scene, message = 'Loading...', options = {}) {
-    
+    // Hide any existing loader first
+    if (this.currentLoaderId) {
+      this.hideLoader(this.currentLoaderId);
+    }
+
     const id = `loader_${++this.loaderId}`;
+    this.currentLoaderId = id; // Set as current active loader
     
     const config = {
       x: options.x || scene.cameras.main.centerX,
@@ -70,8 +76,18 @@ class PhaserLoader {
     // Clean up all components
     loader.overlay.destroy();
     loader.text.destroy();
+    
+    // Clean up progress bar if it exists
+    if (loader.progressBar) {
+      loader.progressBar.destroy();
+    }
 
     this.activeLoaders.delete(loaderId);
+    
+    // Clear current loader if this was the active one
+    if (this.currentLoaderId === loaderId) {
+      this.currentLoaderId = null;
+    }
   }
 
   /**
@@ -109,6 +125,23 @@ class PhaserLoader {
   }
 
   /**
+   * Hide current active loader if any
+   */
+  hideCurrent() {
+    if (this.currentLoaderId) {
+      this.hideLoader(this.currentLoaderId);
+    }
+  }
+
+  /**
+   * Check if there's an active loader
+   * @returns {boolean}
+   */
+  isActive() {
+    return this.currentLoaderId !== null;
+  }
+
+  /**
    * Show progress loader with percentage
    * @param {Phaser.Scene} scene - Phaser scene
    * @param {string} message - Base message
@@ -117,6 +150,11 @@ class PhaserLoader {
    * @returns {string} loaderId
    */
   showProgressLoader(scene, message = 'Loading...', progress = 0, options = {}) {
+    // Hide any existing loader first
+    if (this.currentLoaderId) {
+      this.hideLoader(this.currentLoaderId);
+    }
+
     const id = this.showLoader(scene, `${message} ${progress}%`, options);
     
     // Add progress bar
