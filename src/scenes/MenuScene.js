@@ -133,7 +133,8 @@ const newUser = {
           const newUser = {
   id: appData.id,
   name: appData.first_name,
-  lastName: appData.last_name
+  lastName: appData.last_name,
+  avatarUrl: appData.photo_100
 };  
   upsertToSupabase('players', newUser)
   .then(response => {

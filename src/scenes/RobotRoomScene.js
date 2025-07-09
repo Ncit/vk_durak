@@ -133,8 +133,10 @@ export class RobotRoomScene extends Phaser.Scene {
         const game_table = this.add.image(game_table_x, game_table_y, 'game_table');
 
 
-        this.buildPlayers()
+        // Load multiplayer data if available
+        this.loadMultiplayerData();
 
+        this.buildPlayers()
         this.createOpponents()
         this.buildBoard()
 
@@ -162,12 +164,64 @@ export class RobotRoomScene extends Phaser.Scene {
     }
 
     buildPlayers() {
-        player = new PockerPlayer("Игрок", "avatar", new PlayerCard(currentDeck.getCardFromDeck(), game_table_x - 40, game_table_y + 260), new PlayerCard(currentDeck.getCardFromDeck(), game_table_x + 40, game_table_y + 260), 2000, game_table_x, game_table_y + 120)
-        enemy1 = new PockerPlayer("Противник 1", "avatar", new PlayerCard(currentDeck.getCardFromDeck(), game_table_x - 340, game_table_y + 220), new PlayerCard(currentDeck.getCardFromDeck(), game_table_x - 260, game_table_y + 220), 2000, game_table_x - 300, game_table_y + 80)
-        enemy2 = new PockerPlayer("Противник 2", "avatar", new PlayerCard(currentDeck.getCardFromDeck(), game_table_x - 500, game_table_y - 160), new PlayerCard(currentDeck.getCardFromDeck(), game_table_x - 420, game_table_y - 160), 2000, game_table_x - 300, game_table_y - 160)
-        enemy3 = new PockerPlayer("Противник 3", "avatar", new PlayerCard(currentDeck.getCardFromDeck(), game_table_x + 380, game_table_y - 160), new PlayerCard(currentDeck.getCardFromDeck(), game_table_x + 460, game_table_y - 160), 2000, game_table_x + 280, game_table_y - 160)
-        enemy4 = new PockerPlayer("Противник 4", "avatar", new PlayerCard(currentDeck.getCardFromDeck(), game_table_x + 380, game_table_y + 80), new PlayerCard(currentDeck.getCardFromDeck(), game_table_x + 460, game_table_y + 80), 2000, game_table_x + 280, game_table_y + 80)
-        players = [player, enemy1, enemy2, enemy3, enemy4]
+        // Clear any existing players
+        players = [];
+        
+        // Define seat positions around the table
+        const seatPositions = [
+            { x: game_table_x, y: game_table_y + 120, cardX1: game_table_x - 40, cardY1: game_table_y + 260, cardX2: game_table_x + 40, cardY2: game_table_y + 260 }, // Bottom (current player)
+            { x: game_table_x - 300, y: game_table_y + 80, cardX1: game_table_x - 340, cardY1: game_table_y + 220, cardX2: game_table_x - 260, cardY2: game_table_y + 220 }, // Bottom-left
+            { x: game_table_x - 300, y: game_table_y - 160, cardX1: game_table_x - 500, cardY1: game_table_y - 160, cardX2: game_table_x - 420, cardY2: game_table_y - 160 }, // Top-left
+            { x: game_table_x + 280, y: game_table_y - 160, cardX1: game_table_x + 380, cardY1: game_table_y - 160, cardX2: game_table_x + 460, cardY2: game_table_y - 160 }, // Top-right
+            { x: game_table_x + 280, y: game_table_y + 80, cardX1: game_table_x + 380, cardY1: game_table_y + 80, cardX2: game_table_x + 460, cardY2: game_table_y + 80 }  // Bottom-right
+        ];
+        
+        // Use real multiplayer data if available
+        if (window.gameConfig && window.gameConfig.players && window.gameConfig.players.length > 0) {
+            console.log("Building players from multiplayer data:", window.gameConfig.players);
+            
+            window.gameConfig.players.forEach((dbPlayer, index) => {
+                if (index < seatPositions.length) {
+                    const seat = seatPositions[index];
+                    const playerName = dbPlayer.player ? dbPlayer.player.name : `Player ${dbPlayer.player_id}`;
+                    const chips = dbPlayer.chips || 2000;
+                    
+                    const pockerPlayer = new PockerPlayer(
+                        playerName,
+                        "avatar",
+                        new PlayerCard(currentDeck.getCardFromDeck(), seat.cardX1, seat.cardY1),
+                        new PlayerCard(currentDeck.getCardFromDeck(), seat.cardX2, seat.cardY2),
+                        chips,
+                        seat.x,
+                        seat.y
+                    );
+                    
+                    // Mark current user
+                    pockerPlayer.isCurrentPlayer = (dbPlayer.player_id === window.gameConfig.currentUser?.id);
+                    pockerPlayer.playerId = dbPlayer.player_id;
+                    pockerPlayer.dbData = dbPlayer;
+                    
+                    players.push(pockerPlayer);
+                }
+            });
+        } else {
+            // Fallback to single player if no multiplayer data
+            console.log("No multiplayer data, creating single player");
+            const seat = seatPositions[0];
+            player = new PockerPlayer(
+                "Игрок", 
+                "avatar", 
+                new PlayerCard(currentDeck.getCardFromDeck(), seat.cardX1, seat.cardY1), 
+                new PlayerCard(currentDeck.getCardFromDeck(), seat.cardX2, seat.cardY2), 
+                2000, 
+                seat.x, 
+                seat.y
+            );
+            player.isCurrentPlayer = true;
+            players = [player];
+        }
+        
+        console.log("Built players:", players);
     }
 
     buildBoard() {
@@ -187,51 +241,120 @@ export class RobotRoomScene extends Phaser.Scene {
     }
 
     createOpponents() {
-        enemy_1 = this.add.image(enemy1.xPosition, enemy1.yPosition, enemy1.avatar);
-        enemy_1.setScale(0.8)
-        this.add.text(game_table_x - 300, game_table_y + 140, enemy1.name, { fill: '#4287f5' })
-
-        enemy_1_card_1 = this.add.image(enemy1.firstCard.xPosition, enemy1.firstCard.yPosition, 'card_back');
-        enemy_1_card_1.setScale(0.8)
-        enemy_1_card_2 = this.add.image(enemy1.secondCard.xPosition, enemy1.secondCard.yPosition, 'card_back');
-        enemy_1_card_2.setScale(0.8)
-        enemy_1_chips = this.add.text(game_table_x - 400, game_table_y + 40, enemy1.totalChips, { fill: '#ffffff' })
-        enemy_1_timer = this.add.text(game_table_x - 400, game_table_y + 80, base_time, { fill: '#ffffff' })
-
-        enemy_2 = this.add.image(enemy2.xPosition, enemy2.yPosition, enemy2.avatar);
-        enemy_2.setScale(0.8)
-        this.add.text(game_table_x - 300, game_table_y - 240, enemy2.name, { fill: '#4287f5' })
-
-        enemy_2_card_1 = this.add.image(enemy2.firstCard.xPosition, enemy2.firstCard.yPosition, 'card_back');
-        enemy_2_card_1.setScale(0.8)
-        enemy_2_card_2 = this.add.image(enemy2.secondCard.xPosition, enemy2.secondCard.yPosition, 'card_back');
-        enemy_2_card_2.setScale(0.8)
-        enemy_2_chips = this.add.text(game_table_x - 200, game_table_y - 200, enemy2.totalChips, { fill: '#ffffff' })
-        enemy_2_timer = this.add.text(game_table_x - 200, game_table_y - 240, base_time, { fill: '#ffffff' })
-
-        enemy_3 = this.add.image(enemy3.xPosition, enemy3.yPosition, enemy3.avatar);
-        enemy_3.setScale(0.8)
-        this.add.text(game_table_x + 300, game_table_y + 140, enemy3.name, { fill: '#4287f5' })
-
-        enemy_3_card_1 = this.add.image(enemy3.firstCard.xPosition, enemy3.firstCard.yPosition, 'card_back');
-        enemy_3_card_1.setScale(0.8)
-        enemy_3_card_2 = this.add.image(enemy3.secondCard.xPosition, enemy3.secondCard.yPosition, 'card_back');
-        enemy_3_card_2.setScale(0.8)
-        enemy_3_chips = this.add.text(game_table_x + 280, game_table_y - 260, enemy3.totalChips, { fill: '#ffffff' })
-        enemy_3_timer = this.add.text(game_table_x + 280, game_table_y - 290, base_time, { fill: '#ffffff' })
-
-
-        enemy_4 = this.add.image(enemy3.xPosition, enemy3.yPosition, enemy3.avatar);
-        enemy_4.setScale(0.8)
-        this.add.text(game_table_x + 300, game_table_y - 240, enemy3.name, { fill: '#4287f5' })
-
-        enemy_4_card_1 = this.add.image(enemy4.firstCard.xPosition, enemy4.firstCard.yPosition, 'card_back');
-        enemy_4_card_1.setScale(0.8)
-        enemy_4_card_2 = this.add.image(enemy4.secondCard.xPosition, enemy4.secondCard.yPosition, 'card_back');
-        enemy_4_card_2.setScale(0.8)
-        enemy_4_chips = this.add.text(game_table_x + 280, game_table_y + 180, enemy4.totalChips, { fill: '#ffffff' })
-        enemy_4_timer = this.add.text(game_table_x + 280, game_table_y + 200, base_time, { fill: '#ffffff' })
-
+        // Clear any existing player UI elements
+        this.clearPlayerUI();
+        
+        console.log("Creating opponents for players:", players);
+        
+        // Dynamic text positioning based on seat
+        const textPositions = [
+            { nameX: game_table_x - 40, nameY: game_table_y + 180, chipsX: game_table_x + 80, chipsY: game_table_y + 140, timerX: game_table_x + 80, timerY: game_table_y + 160 }, // Bottom (current player)
+            { nameX: game_table_x - 300, nameY: game_table_y + 140, chipsX: game_table_x - 400, chipsY: game_table_y + 40, timerX: game_table_x - 400, timerY: game_table_y + 80 }, // Bottom-left
+            { nameX: game_table_x - 300, nameY: game_table_y - 240, chipsX: game_table_x - 200, chipsY: game_table_y - 200, timerX: game_table_x - 200, timerY: game_table_y - 240 }, // Top-left
+            { nameX: game_table_x + 300, nameY: game_table_y + 140, chipsX: game_table_x + 280, chipsY: game_table_y - 260, timerX: game_table_x + 280, timerY: game_table_y - 290 }, // Top-right
+            { nameX: game_table_x + 300, nameY: game_table_y - 240, chipsX: game_table_x + 280, chipsY: game_table_y + 180, timerX: game_table_x + 280, timerY: game_table_y + 200 }  // Bottom-right
+        ];
+        
+        players.forEach((player, index) => {
+            if (index < textPositions.length) {
+                const textPos = textPositions[index];
+                
+                // Create player avatar
+                const avatar = this.add.image(player.xPosition, player.yPosition, player.avatar);
+                avatar.setScale(0.8);
+                
+                // Highlight current player differently
+                if (player.isCurrentPlayer) {
+                    avatar.setTint(0x88ff88); // Green tint for current player
+                }
+                
+                // Create player name
+                const nameText = this.add.text(textPos.nameX, textPos.nameY, player.name, { 
+                    fill: player.isCurrentPlayer ? '#88ff88' : '#4287f5',
+                    fontSize: '16px'
+                });
+                
+                // Create cards (hidden for other players, visible for current player)
+                let card1, card2;
+                if (player.isCurrentPlayer) {
+                    // Show actual cards for current player
+                    card1 = this.add.image(player.firstCard.xPosition, player.firstCard.yPosition, player.firstCard.value || 'card_back');
+                    card2 = this.add.image(player.secondCard.xPosition, player.secondCard.yPosition, player.secondCard.value || 'card_back');
+                } else {
+                    // Show card backs for other players
+                    card1 = this.add.image(player.firstCard.xPosition, player.firstCard.yPosition, 'card_back');
+                    card2 = this.add.image(player.secondCard.xPosition, player.secondCard.yPosition, 'card_back');
+                }
+                card1.setScale(0.8);
+                card2.setScale(0.8);
+                
+                // Create chips display
+                const chipsText = this.add.text(textPos.chipsX, textPos.chipsY, player.totalChips, { 
+                    fill: '#ffffff',
+                    fontSize: '14px'
+                });
+                
+                // Create timer display
+                const timerText = this.add.text(textPos.timerX, textPos.timerY, base_time, { 
+                    fill: '#ffffff',
+                    fontSize: '12px'
+                });
+                
+                // Store references for later updates
+                player.uiElements = {
+                    avatar: avatar,
+                    nameText: nameText,
+                    card1: card1,
+                    card2: card2,
+                    chipsText: chipsText,
+                    timerText: timerText
+                };
+            }
+        });
+    }
+    
+    clearPlayerUI() {
+        // Clear any existing UI elements
+        players.forEach(player => {
+            if (player.uiElements) {
+                Object.values(player.uiElements).forEach(element => {
+                    if (element && element.destroy) {
+                        element.destroy();
+                    }
+                });
+                player.uiElements = null;
+            }
+        });
+    }
+    
+    refreshPlayers() {
+        console.log("Refreshing multiplayer players display");
+        this.buildPlayers();
+        this.createOpponents();
+    }
+    
+    async loadMultiplayerData() {
+        // Load current game and players if we have game data
+        if (window.gameConfig && window.gameConfig.currentGame?.id) {
+            console.log("Loading multiplayer data for game:", window.gameConfig.currentGame.id);
+            
+            try {
+                // Load players for current game
+                await loadPlayers(window.gameConfig.currentGame.id);
+                
+                // Setup real-time subscriptions for player updates
+                setupGameSubscriptions(window.gameConfig.currentGame.id);
+                
+                // Load current game state
+                await loadGameState(window.gameConfig.currentGame.id);
+                
+                console.log("Multiplayer data loaded successfully");
+            } catch (error) {
+                console.error("Error loading multiplayer data:", error);
+            }
+        } else {
+            console.log("No active game found, running in single player mode");
+        }
     }
 
     flop() {
@@ -299,32 +422,51 @@ export class RobotRoomScene extends Phaser.Scene {
         flopCards.forEach(element => {
             element.destroy()
         });
-        turn_image.destroy()
-        river_image.destroy()
+        if (turn_image) turn_image.destroy()
+        if (river_image) river_image.destroy()
         river_image = null
         turn_image = null
         flopCards = []
         playersCards = []
 
         currentDeck.resetCardDeck()
-        this.buildPlayers()
+        this.refreshPlayers()  // Use refreshPlayers to rebuild with current multiplayer data
         this.buildBoard()
     }
 }
 
 function createPlayerCards(scene) {
-    player_card_1_image = scene.add.image(game_table_x - 40, game_table_y + 260, 'card_back');
-    player_card_1_image.setScale(0.8)
-    player_card_2_image = scene.add.image(game_table_x + 40, game_table_y + 260, 'card_back');
-    player_card_2_image.setScale(0.8)
+    // Find current player from multiplayer data
+    const currentPlayer = players.find(p => p.isCurrentPlayer) || players[0];
+    
+    if (currentPlayer) {
+        player_card_1_image = scene.add.image(currentPlayer.firstCard.xPosition, currentPlayer.firstCard.yPosition, 'card_back');
+        player_card_1_image.setScale(0.8)
+        player_card_2_image = scene.add.image(currentPlayer.secondCard.xPosition, currentPlayer.secondCard.yPosition, 'card_back');
+        player_card_2_image.setScale(0.8)
+    } else {
+        // Fallback to default positions
+        player_card_1_image = scene.add.image(game_table_x - 40, game_table_y + 260, 'card_back');
+        player_card_1_image.setScale(0.8)
+        player_card_2_image = scene.add.image(game_table_x + 40, game_table_y + 260, 'card_back');
+        player_card_2_image.setScale(0.8)
+    }
 }
 
 function createPlayer(scene) {
-    player_image = scene.add.sprite(player.xPosition, player.yPosition, player.avatar);
-    player_image.setScale(0.8)
-    player_name = scene.add.text(game_table_x - 40, game_table_y + 180, player.name, { fill: '#4287f5' })
-    player_chips = scene.add.text(game_table_x + 80, game_table_y + 140, player.totalChips, { fill: '#ffffff' })
-    player_timer = scene.add.text(game_table_x + 80, game_table_y + 160, base_time, { fill: '#ffffff' })
+    // Find current player from multiplayer data
+    const currentPlayer = players.find(p => p.isCurrentPlayer) || players[0];
+    
+    if (currentPlayer) {
+        player_image = scene.add.sprite(currentPlayer.xPosition, currentPlayer.yPosition, currentPlayer.avatar);
+        player_image.setScale(0.8)
+        player_name = scene.add.text(game_table_x - 40, game_table_y + 180, currentPlayer.name, { fill: '#88ff88' })
+        player_chips = scene.add.text(game_table_x + 80, game_table_y + 140, currentPlayer.totalChips, { fill: '#ffffff' })
+        player_timer = scene.add.text(game_table_x + 80, game_table_y + 160, base_time, { fill: '#ffffff' })
+        
+        // Set global player reference for compatibility
+        player = currentPlayer;
+    }
 }
 
 function createButtons(scene) {

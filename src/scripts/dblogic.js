@@ -327,7 +327,15 @@ function updateGameState(state) {
 }
 
 function renderPlayers() {
-     console.log("RENDER");
+    console.log("Rendering players:", window.gameConfig.players);
+    
+    // If we're in RobotRoomScene, refresh the multiplayer display
+    if (window.currentScene && window.currentScene.scene && window.currentScene.scene.key === 'RobotRoomScene') {
+        console.log("Refreshing RobotRoomScene with new player data");
+        if (typeof window.currentScene.refreshPlayers === 'function') {
+            window.currentScene.refreshPlayers();
+        }
+    }
 }
 
 
